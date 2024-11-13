@@ -18,7 +18,7 @@
   "require": {
     "php": "^7.4|^8.0",
     "inertiajs/inertia-laravel": "^1.0",
-    "illuminate/support": "^8.0"
+    "illuminate/support": "^8.0|^9.0|^10.0|^11.0"
   },
   "require-dev": {
     "orchestra/testbench": "^6.0",
@@ -26,7 +26,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Blaspsoft\\TokenForge\\": "src"
+      "Blaspsoft\\TokenForge\\": "src/"
     }
   },
   "autoload-dev": {

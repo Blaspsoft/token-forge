@@ -2,6 +2,7 @@
 
 namespace Blaspsoft\TokenForge;
 
+use Illuminate\Support\Facades\Route;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\ServiceProvider;
 
@@ -12,19 +13,19 @@ class TokenForgeServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        /*
-         * Optional methods to load your package assets
-         */
-        $this->loadRoutesFrom(__DIR__.'/routes/web.php');
+        Route::middleware(['web', 'auth'])
+            ->namespace('YourPackageNamespace\Http\Controllers')
+            ->group(__DIR__.'../../routes/web.php');
 
-        (new Filesystem)->copyFile(__DIR__.'/Middleware/FlashInertiaData.php', app_path('Http/Middleware/FlashInertiaData.php'));
-        (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/inertia-vue/resources/js/Pages/API', resource_path('js/Pages'));
+        (new Filesystem)->copy(__DIR__.'/Controllers/Inertia/ApiTokenController.php', app_path('Http/Controllers/ApiTokenController.php'));
+
+        (new Filesystem)->copyDirectory(__DIR__.'/../stubs/inertia-vue/Pages/API', resource_path('js/Pages/API'));
 
         if ($this->app->runningInConsole()) {
 
             $this->publishes([
                 __DIR__.'/../config/config.php' => config_path('token-forge.php'),
-            ], 'config');
+            ], 'token-forge-config');
         }
     }
 

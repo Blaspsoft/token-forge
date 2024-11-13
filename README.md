@@ -1,52 +1,77 @@
-# Very short description of the package
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/blaspsoft/token-forge.svg?style=flat-square)](https://packagist.org/packages/blaspsoft/token-forge)
-[![Total Downloads](https://img.shields.io/packagist/dt/blaspsoft/token-forge.svg?style=flat-square)](https://packagist.org/packages/blaspsoft/token-forge)
-![GitHub Actions](https://github.com/blaspsoft/token-forge/actions/workflows/main.yml/badge.svg)
+# Token Forge
 
-This is where your description should go. Try and limit it to a paragraph or two, and maybe throw in a mention of what PSRs you support to avoid any confusion with users and contributors.
+`blaspsoft/token-forge` is a Laravel package that adds robust, customizable API token management to your application, inspired by Laravel Jetstream. Token Forge allows you to create, manage, and monitor API tokens with ease, providing secure access control for your API.
+
+**Note:** This package currently only supports applications using **Inertia.js with Vue**.
+
+## Features
+
+- Generate and manage API tokens for users
+- Define token permissions for precise access control
+- Monitor token activity and revoke tokens when necessary
+- Seamlessly integrates with Laravel’s authentication and session management
 
 ## Installation
 
-You can install the package via composer:
+Install the package via Composer:
 
 ```bash
 composer require blaspsoft/token-forge
 ```
 
-## Usage
-
-```php
-// Usage description here
-```
-
-### Testing
+After installing the package, publish the configuration file:
 
 ```bash
-composer test
+php artisan vendor:publish --tag=token-forge-config --force
 ```
 
-### Changelog
+This command will publish a configuration file at `config/token-forge.php`, where you can customize Token Forge settings.
 
-Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recently.
+## Setup Instructions
 
-## Contributing
+### 1. Middleware Configuration
 
-Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
+To ensure that Token Forge integrates smoothly with your Inertia responses, modify your `HandleInertiaRequest.php` middleware file as follows:
 
-### Security
+Add the following block to the `share` method in `app/Http/Middleware/HandleInertiaRequest.php`:
 
-If you discover any security related issues, please email michael.deeming90@gmail.com instead of using the issue tracker.
+```php
+public function share(Request $request): array
+{
+    return [
+        ...parent::share($request),
+        'auth' => [
+            'user' => $request->user(),
+        ],
+        'flash' => [
+            'tokenForge' => [
+                'token' => fn () => session()->get('token'),
+            ],
+        ],
+    ];
+}
+```
 
-## Credits
+This setup enables Token Forge to flash token information to your Inertia responses, allowing you to use the token in your Vue components.
 
--   [Michael Deeming](https://github.com/blaspsoft)
--   [All Contributors](../../contributors)
+### 2. API Token Management Routes
+
+Once the package is installed and configured, you can manage API tokens using the following routes:
+
+| Method | URI                   | Controller Action            | Description                     |
+|--------|------------------------|------------------------------|---------------------------------|
+| GET    | `/api-tokens`         | `ApiTokenController@index`   | Display the API tokens list     |
+| POST   | `/api-tokens`         | `ApiTokenController@store`   | Create a new API token          |
+| PUT    | `/api-tokens/{token}`  | `ApiTokenController@update`  | Update an existing API token    |
+| DELETE | `/api-tokens/{token}`  | `ApiTokenController@destroy` | Delete an API token             |
+
+These routes provide a complete interface to generate, view, and revoke API tokens through a consistent REST API.
+
+## Configuration
+
+The package configuration is located in `config/token-forge.php`. Here, you can customize settings such as token expiration and default permissions.
 
 ## License
 
-The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
-
-## Laravel Package Boilerplate
-
-This package was generated using the [Laravel Package Boilerplate](https://laravelpackageboilerplate.com).
+This package is open-source software licensed under the [MIT license](LICENSE.md).
