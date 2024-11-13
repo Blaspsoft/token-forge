@@ -1,4 +1,3 @@
-
 # Token Forge
 
 `blaspsoft/token-forge` is a Laravel package that adds robust, customizable API token management to your application, inspired by Laravel Jetstream. Token Forge allows you to create, manage, and monitor API tokens with ease, providing secure access control for your API.
@@ -11,6 +10,22 @@
 - Define token permissions for precise access control
 - Monitor token activity and revoke tokens when necessary
 - Seamlessly integrates with Laravel’s authentication and session management
+
+## Requirements
+
+This package requires the following dependencies:
+
+- **Laravel Breeze**: For Inertia support and basic application scaffolding.
+- **Laravel Sanctum**: Provides token-based authentication for API tokens.
+
+Make sure these dependencies are installed:
+
+```bash
+composer require laravel/breeze --dev
+composer require laravel/sanctum
+php artisan breeze:install
+php artisan migrate
+```
 
 ## Installation
 
@@ -30,7 +45,26 @@ This command will publish a configuration file at `config/token-forge.php`, wher
 
 ## Setup Instructions
 
-### 1. Middleware Configuration
+### 1. Sanctum Setup
+
+Ensure that Laravel Sanctum is properly configured. Make sure the `HasApiTokens` trait is added to your `User` model:
+
+```php
+use Laravel\Sanctum\HasApiTokens;
+
+class User extends Authenticatable
+{
+    use HasApiTokens, Notifiable;
+}
+```
+
+Additionally, ensure that Sanctum's migrations have been run to create the necessary database tables:
+
+```bash
+php artisan migrate
+```
+
+### 2. Middleware Configuration
 
 To ensure that Token Forge integrates smoothly with your Inertia responses, modify your `HandleInertiaRequest.php` middleware file as follows:
 
@@ -55,16 +89,16 @@ public function share(Request $request): array
 
 This setup enables Token Forge to flash token information to your Inertia responses, allowing you to use the token in your Vue components.
 
-### 2. API Token Management Routes
+### 3. API Token Management Routes
 
 Once the package is installed and configured, you can manage API tokens using the following routes:
 
-| Method | URI                   | Controller Action            | Description                     |
-|--------|------------------------|------------------------------|---------------------------------|
-| GET    | `/api-tokens`         | `ApiTokenController@index`   | Display the API tokens list     |
-| POST   | `/api-tokens`         | `ApiTokenController@store`   | Create a new API token          |
-| PUT    | `/api-tokens/{token}`  | `ApiTokenController@update`  | Update an existing API token    |
-| DELETE | `/api-tokens/{token}`  | `ApiTokenController@destroy` | Delete an API token             |
+| Method | URI                   | Controller Action            | Description                  |
+| ------ | --------------------- | ---------------------------- | ---------------------------- |
+| GET    | `/api-tokens`         | `ApiTokenController@index`   | Display the API tokens list  |
+| POST   | `/api-tokens`         | `ApiTokenController@store`   | Create a new API token       |
+| PUT    | `/api-tokens/{token}` | `ApiTokenController@update`  | Update an existing API token |
+| DELETE | `/api-tokens/{token}` | `ApiTokenController@destroy` | Delete an API token          |
 
 These routes provide a complete interface to generate, view, and revoke API tokens through a consistent REST API.
 
