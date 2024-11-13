@@ -19,6 +19,8 @@ class TokenForgeServiceProvider extends ServiceProvider
 
         (new Filesystem)->copy(__DIR__.'/Controllers/Inertia/ApiTokenController.php', app_path('Http/Controllers/ApiTokenController.php'));
 
+        (new Filesystem)->copy(__DIR__.'/../stubs/tests/TokenTest.php', base_path('tests/Feature/TokenTest.php'));
+
         (new Filesystem)->copyDirectory(__DIR__.'/../stubs/inertia-vue/Pages/API', resource_path('js/Pages/API'));
 
         if ($this->app->runningInConsole()) {
