@@ -2,7 +2,7 @@
 
 `blaspsoft/token-forge` is a Laravel package that adds robust, customizable API token management to your application, inspired by Laravel Jetstream. Token Forge allows you to create, manage, and monitor API tokens with ease, providing secure access control for your API.
 
-**Note:** This package currently only supports applications using **Inertia.js with Vue**.
+**Note:** This package currently only supports applications using **Laravel Breeze with the Inertia Vue stack**.
 
 ## Features
 
@@ -15,15 +15,15 @@
 
 This package requires the following dependencies:
 
-- **Laravel Breeze**: For Inertia support and basic application scaffolding.
+- **Laravel Breeze**: Specifically the Inertia Vue stack for front-end support.
 - **Laravel Sanctum**: Provides token-based authentication for API tokens.
 
-Make sure these dependencies are installed:
+Make sure these dependencies are installed and configured:
 
 ```bash
 composer require laravel/breeze --dev
+php artisan breeze:install vue
 composer require laravel/sanctum
-php artisan breeze:install
 php artisan migrate
 ```
 
