@@ -1,54 +1,54 @@
 {
-    "name": "blaspsoft/token-forge",
-    "description": "Token Forge brings Laravel Jetstream token management over to Laravel Breeze",
-    "keywords": [
-        "blaspsoft",
-        "token-forge"
-    ],
-    "homepage": "https://github.com/blaspsoft/token-forge",
-    "license": "MIT",
-    "type": "library",
-    "authors": [
-        {
-            "name": "Michael Deeming",
-            "email": "michael.deeming90@gmail.com",
-            "role": "Developer"
-        }
-    ],
-    "require": {
-        "php": "^7.4|^8.0",
-        "illuminate/support": "^8.0"
-    },
-    "require-dev": {
-        "orchestra/testbench": "^6.0",
-        "phpunit/phpunit": "^9.0"
-    },
-    "autoload": {
-        "psr-4": {
-            "Blaspsoft\\TokenForge\\": "src"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Blaspsoft\\TokenForge\\Tests\\": "tests"
-        }
-    },
-    "scripts": {
-        "test": "vendor/bin/phpunit",
-        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
-
-    },
-    "config": {
-        "sort-packages": true
-    },
-    "extra": {
-        "laravel": {
-            "providers": [
-                "Blaspsoft\\TokenForge\\TokenForgeServiceProvider"
-            ],
-            "aliases": {
-                "TokenForge": "Blaspsoft\\TokenForge\\TokenForgeFacade"
-            }
-        }
+  "name": "blaspsoft/token-forge",
+  "description": "Token Forge brings Laravel Jetstream token management over to Laravel Breeze",
+  "keywords": [
+    "blaspsoft",
+    "token-forge"
+  ],
+  "homepage": "https://github.com/blaspsoft/token-forge",
+  "license": "MIT",
+  "type": "library",
+  "authors": [
+    {
+      "name": "Michael Deeming",
+      "email": "michael.deeming90@gmail.com",
+      "role": "Developer"
     }
+  ],
+  "require": {
+    "php": "^7.4|^8.0",
+    "inertiajs/inertia-laravel": "^1.0",
+    "illuminate/support": "^8.0"
+  },
+  "require-dev": {
+    "orchestra/testbench": "^6.0",
+    "phpunit/phpunit": "^9.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Blaspsoft\\TokenForge\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Blaspsoft\\TokenForge\\Tests\\": "tests"
+    }
+  },
+  "scripts": {
+    "test": "vendor/bin/phpunit",
+    "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+  },
+  "config": {
+    "sort-packages": true
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Blaspsoft\\TokenForge\\TokenForgeServiceProvider"
+      ],
+      "aliases": {
+        "TokenForge": "Blaspsoft\\TokenForge\\TokenForgeFacade"
+      }
+    }
+  }
 }
