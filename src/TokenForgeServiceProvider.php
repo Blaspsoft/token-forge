@@ -19,7 +19,7 @@ class TokenForgeServiceProvider extends ServiceProvider
 
         (new Filesystem)->copy(__DIR__.'/Controllers/Inertia/ApiTokenController.php', app_path('Http/Controllers/ApiTokenController.php'));
 
-        (new Filesystem)->copy(__DIR__.'/../stubs/tests/TokenTest.php', base_path('tests/Feature/TokenTest.php'));
+        $this->installTests();
 
         (new Filesystem)->copyDirectory(__DIR__.'/../stubs/inertia-vue/Pages/API', resource_path('js/Pages/API'));
 
@@ -43,5 +43,11 @@ class TokenForgeServiceProvider extends ServiceProvider
         $this->app->singleton('token-forge', function () {
             return new TokenForge;
         });
+    }
+
+    private function installTests()
+    {
+        (new Filesystem)->ensureDirectoryExists(base_path('tests/Feature'));
+        (new Filesystem)->copy(__DIR__.'/../stubs/tests/Feature/TokenTest.php', base_path('tests/Feature/TokenTest.php'));
     }
 }
