@@ -170,6 +170,16 @@ After completing the setup, ensure your front-end assets are compiled. You can u
 
 This will ensure the necessary assets are available for the API token management UI.
 
+## Screenshots
+
+<div align="center">
+    <img alt="token-forge" src="./assets/screenshots/snippet-1.png" />
+    <img alt="token-forge" src="./assets/screenshots/snippet-2.png" />
+    <img alt="token-forge" src="./assets/screenshots/snippet-3.png" />
+    <img alt="token-forge" src="./assets/screenshots/snippet-4.png" />
+    <img alt="token-forge" src="./assets/screenshots/snippet-5.png" />
+</div>
+
 ## License
 
 This package is open-source software licensed under the [MIT license](LICENSE.md).
