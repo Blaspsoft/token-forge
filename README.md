@@ -33,7 +33,10 @@ Make sure these dependencies are installed and configured:
 composer require laravel/breeze --dev
 php artisan breeze:install vue
 composer require laravel/sanctum
+php artisan install:api
 php artisan migrate
+npm install
+npm run dev
 ```
 
 ## Installation
@@ -67,11 +70,14 @@ class User extends Authenticatable
 }
 ```
 
-Additionally, ensure that Sanctum's migrations have been run to create the necessary database tables:
+Additionally, ensure that Sanctum's setup command is run to install its configuration and migrations:
 
 ```bash
+php artisan install:api
 php artisan migrate
 ```
+
+This will publish Sanctum's configuration and migration files, and running `php artisan migrate` ensures the necessary database tables are created.
 
 ### 2. Middleware Configuration
 
@@ -113,7 +119,56 @@ These routes provide a complete interface to generate, view, and revoke API toke
 
 ## Configuration
 
-The package configuration is located in `config/token-forge.php`. Here, you can customize settings such as token expiration and default permissions.
+The package configuration is located in `config/token-forge.php`. Here are the default values:
+
+### Default Permissions
+
+```php
+'default_permissions' => [
+    'read',
+],
+```
+
+These are the default permissions assigned to new API tokens if no specific permissions are provided during creation.
+
+### Available Permissions
+
+```php
+'available_permissions' => [
+    'create',
+    'read',
+    'update',
+    'delete',
+],
+```
+
+These are the permissions available to assign to API tokens. You can modify these values to fit your application’s needs.
+
+If you wish to change the default or available permissions, publish the configuration file using:
+
+```bash
+php artisan vendor:publish --tag=token-forge-config --force
+```
+
+Then, update the `config/token-forge.php` file to reflect your desired permissions.
+
+## Final Step: Build Assets
+
+After completing the setup, ensure your front-end assets are compiled. You can use one of the following commands:
+
+- For development:
+
+  ```bash
+  npm run dev
+  ```
+
+- For production:
+
+  ```bash
+  npm run build
+  ```
+
+This will ensure the necessary assets are available for the API token management UI.
 
 ## License
 
