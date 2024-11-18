@@ -13,22 +13,16 @@ class TokenForgeServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Route::middleware(['web', 'auth'])
-            ->namespace('YourPackageNamespace\Http\Controllers')
-            ->group(__DIR__.'../../routes/web.php');
-
-        (new Filesystem)->copy(__DIR__.'/Controllers/Inertia/ApiTokenController.php', app_path('Http/Controllers/ApiTokenController.php'));
-
-        $this->installTests();
-
-        (new Filesystem)->copyDirectory(__DIR__.'/../stubs/inertia-vue/Pages/API', resource_path('js/Pages/API'));
-
         if ($this->app->runningInConsole()) {
 
             $this->publishes([
                 __DIR__.'/../config/config.php' => config_path('token-forge.php'),
             ], 'token-forge-config');
         }
+
+        $this->commands([
+            Console\InstallCommand::class,
+        ]);
     }
 
     /**
@@ -39,15 +33,6 @@ class TokenForgeServiceProvider extends ServiceProvider
         // Automatically apply the package configuration
         $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'token-forge');
 
-        // Register the main class to use with the facade
-        $this->app->singleton('token-forge', function () {
-            return new TokenForge;
-        });
-    }
-
-    private function installTests()
-    {
-        (new Filesystem)->ensureDirectoryExists(base_path('tests/Feature'));
-        (new Filesystem)->copy(__DIR__.'/../stubs/tests/Feature/TokenTest.php', base_path('tests/Feature/TokenTest.php'));
+        return [Console\InstallCommand::class];
     }
 }
