@@ -1,12 +1,19 @@
 <?php
 
-namespace Blaspsoft\TokenForge\Controllers\Blade;
+namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Blaspsoft\TokenForge\Contracts\TokenForgeController;
 
-class ApiTokenController extends Controller
+class BladeTokenController extends Controller implements TokenForgeController
 {
+    /**
+     * Show the user API token management screen.
+     * 
+     * @return \Illuminate\View\View
+     * 
+     */
     public function index(Request $request)
     {
         return view('api.index', [
@@ -16,6 +23,13 @@ class ApiTokenController extends Controller
         ]);
     }
 
+    /**
+     * Store a new API token for the user.
+     * 
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     * 
+     */
     public function store(Request $request)
     {
         $request->validate([
@@ -32,6 +46,14 @@ class ApiTokenController extends Controller
         return back();
     }
 
+    /**
+     * Update the given API token's permissions.
+     * 
+     * @param \Illuminate\Http\Request $request
+     * @param string $tokenId
+     * @return \Illuminate\Http\RedirectResponse
+     * 
+     */
     public function update(Request $request, $tokenId)
     {
         $token = $request->user()->tokens()->where('id', $tokenId)->firstOrFail();
@@ -43,6 +65,14 @@ class ApiTokenController extends Controller
         return back();
     }
 
+    /**
+     * Delete the given API token.
+     * 
+     * @param \Illuminate\Http\Request $request
+     * @param string $tokenId
+     * @return \Illuminate\Http\RedirectResponse
+     * 
+     */
     public function destroy(Request $request, $tokenId)
     {
         $request->user()->tokens()->where('id', $tokenId)->delete();

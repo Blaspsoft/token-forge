@@ -2,9 +2,10 @@
 
 namespace Blaspsoft\TokenForge;
 
-use Illuminate\Support\Facades\Route;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Blaspsoft\TokenForge\Contracts\TokenForgeController;
 
 class TokenForgeServiceProvider extends ServiceProvider
 {
@@ -13,6 +14,9 @@ class TokenForgeServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Route::middleware(['web', 'auth'])
+            ->group(__DIR__.'../../routes/web.php');
+
         if ($this->app->runningInConsole()) {
 
             $this->publishes([
@@ -30,6 +34,21 @@ class TokenForgeServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $filesystem = new Filesystem();
+
+        // Dynamically bind the correct controller based on its presence
+        $controllers = [
+            'App\Http\Controllers\VueTokenController' => app_path('Http/Controllers/VueTokenController.php'),
+            'App\Http\Controllers\BladeTokenController' => app_path('Http/Controllers/BladeTokenController.php'),
+        ];
+
+        foreach ($controllers as $class => $path) {
+            if ($filesystem->exists($path)) {
+                $this->app->bind(TokenForgeController::class, $class);
+                break;
+            }
+        }
+        
         // Automatically apply the package configuration
         $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'token-forge');
 

@@ -1,12 +1,13 @@
 <?php
 
-namespace Blaspsoft\TokenForge\Controllers\Inertia;
+namespace App\Http\Controllers;
 
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Blaspsoft\TokenForge\Contracts\TokenForgeController;
 
-class ApiTokenController extends Controller
+class VueTokenController extends Controller implements TokenForgeController
 {
     /**
      * Show the user API token management screen.
