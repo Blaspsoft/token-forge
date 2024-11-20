@@ -1,22 +1,22 @@
 <?php
 
-namespace Blaspsoft\TokenForge\Controllers\Inertia;
+namespace App\Http\Controllers;
 
-use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Blaspsoft\TokenForge\Contracts\TokenForgeController;
 
-class ApiTokenController extends Controller
+class BladeTokenController extends Controller implements TokenForgeController
 {
     /**
      * Show the user API token management screen.
      * 
-     * @return \Inertia\Response
+     * @return \Illuminate\View\View
      * 
      */
     public function index(Request $request)
     {
-        return Inertia::render('API/Index', [
+        return view('api.index', [
             'tokens' => $request->user()->tokens,
             'availablePermissions' => config('token-forge.available_permissions'),
             'defaultPermissions' => config('token-forge.default_permissions'),
@@ -32,9 +32,16 @@ class ApiTokenController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'permissions' => 'nullable|array',
+            'permissions.*' => 'in:'.implode(',', config('token-forge.available_permissions')),
+        ]);
+
         $token = $request->user()->createToken($request->name, $request->permissions);
 
-        $request->session()->flash('token', $token->plainTextToken);
+        $request->session()->flash('status', 'token-created');
+        $request->session()->flash('token-forge', $token->plainTextToken);
 
         return redirect()->route('api-tokens.index');
     }
