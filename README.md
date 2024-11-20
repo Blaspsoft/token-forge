@@ -11,7 +11,7 @@
 
 `blaspsoft/token-forge` is a Laravel package that adds robust, customizable API token management to your application, inspired by Laravel Jetstream. Token Forge allows you to create, manage, and monitor API tokens with ease, providing secure access control for your API.
 
-**Note:** This package currently only supports applications using **Laravel Breeze with the Inertia Vue stack**.
+**Note:** This package supports both the **Blade** and **Inertia Vue** Laravel Breeze stacks.
 
 ## Features
 
@@ -19,25 +19,43 @@
 - Define token permissions for precise access control
 - Monitor token activity and revoke tokens when necessary
 - Seamlessly integrates with Laravel’s authentication and session management
+- Uses a contract (`TokenForgeController` interface) for flexibility and stack-specific implementation
 
 ## Requirements
 
 This package requires the following dependencies:
 
-- **Laravel Breeze**: Specifically the Inertia Vue stack for front-end support.
+- **Laravel Breeze**: Must use the Blade or Inertia Vue stack for front-end support.
 - **Laravel Sanctum**: Provides token-based authentication for API tokens.
 
-Make sure these dependencies are installed and configured:
+Install Laravel Breeze with the relevant stack:
 
 ```bash
+# For Blade stack:
+composer require laravel/breeze --dev
+php artisan breeze:install blade
+
+# For Vue-Inertia stack:
 composer require laravel/breeze --dev
 php artisan breeze:install vue
+```
+
+Install Laravel Sanctum:
+
+```bash
 composer require laravel/sanctum
 php artisan install:api
 php artisan migrate
+```
+
+Then install the front-end dependencies:
+
+```bash
 npm install
 npm run dev
 ```
+
+---
 
 ## Installation
 
@@ -55,9 +73,33 @@ php artisan vendor:publish --tag=token-forge-config --force
 
 This command will publish a configuration file at `config/token-forge.php`, where you can customize Token Forge settings.
 
+---
+
 ## Setup Instructions
 
-### 1. Sanctum Setup
+### 1. Install the Stack
+
+Depending on your Laravel Breeze stack, run the appropriate command to install Token Forge:
+
+- For **Blade** stack:
+
+  ```bash
+  php artisan token-forge:install blade
+  ```
+
+- For **Vue-Inertia** stack:
+  ```bash
+  php artisan token-forge:install vue
+  ```
+
+This command will:
+
+- Copy the appropriate controller (`BladeTokenController` or `VueTokenController`) to your `app/Http/Controllers` directory.
+- Automatically bind the `TokenForgeController` interface to the correct implementation.
+
+---
+
+### 2. Sanctum Setup
 
 Ensure that Laravel Sanctum is properly configured. Make sure the `HasApiTokens` trait is added to your `User` model:
 
@@ -77,9 +119,9 @@ php artisan install:api
 php artisan migrate
 ```
 
-This will publish Sanctum's configuration and migration files, and running `php artisan migrate` ensures the necessary database tables are created.
+---
 
-### 2. Middleware Configuration
+### 3. Middleware Configuration (Inertia Vue Only)
 
 To ensure that Token Forge integrates smoothly with your Inertia responses, modify your `HandleInertiaRequest.php` middleware file as follows:
 
@@ -104,18 +146,24 @@ public function share(Request $request): array
 
 This setup enables Token Forge to flash token information to your Inertia responses, allowing you to use the token in your Vue components.
 
-### 3. API Token Management Routes
+---
 
-Once the package is installed and configured, you can manage API tokens using the following routes:
+### 4. API Token Management Routes
 
-| Method | URI                   | Controller Action            | Description                  |
-| ------ | --------------------- | ---------------------------- | ---------------------------- |
-| GET    | `/api-tokens`         | `ApiTokenController@index`   | Display the API tokens list  |
-| POST   | `/api-tokens`         | `ApiTokenController@store`   | Create a new API token       |
-| PUT    | `/api-tokens/{token}` | `ApiTokenController@update`  | Update an existing API token |
-| DELETE | `/api-tokens/{token}` | `ApiTokenController@destroy` | Delete an API token          |
+The routes provided by Token Forge implement the `TokenForgeController` interface, allowing flexibility for different stacks. The interface is automatically resolved to the correct implementation (Blade or Vue) based on the installation.
+
+Here are the available routes:
+
+| Method | URI                   | Interface Method | Description                  |
+| ------ | --------------------- | ---------------- | ---------------------------- |
+| GET    | `/api-tokens`         | `index`          | Display the API tokens list  |
+| POST   | `/api-tokens`         | `store`          | Create a new API token       |
+| PUT    | `/api-tokens/{token}` | `update`         | Update an existing API token |
+| DELETE | `/api-tokens/{token}` | `destroy`        | Delete an API token          |
 
 These routes provide a complete interface to generate, view, and revoke API tokens through a consistent REST API.
+
+---
 
 ## Configuration
 
@@ -152,6 +200,8 @@ php artisan vendor:publish --tag=token-forge-config --force
 
 Then, update the `config/token-forge.php` file to reflect your desired permissions.
 
+---
+
 ## Final Step: Build Assets
 
 After completing the setup, ensure your front-end assets are compiled. You can use one of the following commands:
@@ -170,6 +220,8 @@ After completing the setup, ensure your front-end assets are compiled. You can u
 
 This will ensure the necessary assets are available for the API token management UI.
 
+---
+
 ## Screenshots
 
 <div align="center">
@@ -179,6 +231,8 @@ This will ensure the necessary assets are available for the API token management
     <img alt="token-forge" src="./assets/screenshots/snippet-4.png" />
     <img alt="token-forge" src="./assets/screenshots/snippet-5.png" />
 </div>
+
+---
 
 ## License
 
