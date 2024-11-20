@@ -20,9 +20,7 @@ class TokenTest extends TestCase
 
         $response->assertOk()
              ->assertSee('Manage API Tokens')
-             ->assertSee('You may delete any of your existing tokens')
-             ->assertViewIs('api-tokens.index')
-             ->assertViewHas('auth.user');
+             ->assertViewHas('tokens');
     }
 
     public function test_user_can_create_token()

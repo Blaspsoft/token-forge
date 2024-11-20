@@ -16,6 +16,6 @@ trait InstallsBladeStack
 
         // Tests
         (new Filesystem)->ensureDirectoryExists(base_path('tests/Feature'));
-        (new Filesystem)->copy(__DIR__.'/../../stubs/inertia-vue/tests/Feature/TokenTest.php', base_path('tests/Feature/TokenTest.php'));
+        (new Filesystem)->copy(__DIR__.'/../../stubs/blade/tests/Feature/TokenTest.php', base_path('tests/Feature/TokenTest.php'));
     }
 }

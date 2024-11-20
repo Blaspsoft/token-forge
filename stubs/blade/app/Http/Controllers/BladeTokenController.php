@@ -43,7 +43,7 @@ class BladeTokenController extends Controller implements TokenForgeController
         $request->session()->flash('status', 'token-created');
         $request->session()->flash('token-forge', $token->plainTextToken);
 
-        return back();
+        return redirect()->route('api-tokens.index');
     }
 
     /**
@@ -62,7 +62,7 @@ class BladeTokenController extends Controller implements TokenForgeController
             'abilities' => $request->permissions,
         ])->save();
 
-        return back();
+        return redirect()->route('api-tokens.index');
     }
 
     /**
@@ -77,6 +77,6 @@ class BladeTokenController extends Controller implements TokenForgeController
     {
         $request->user()->tokens()->where('id', $tokenId)->delete();
 
-        return back();
+        return redirect()->route('api-tokens.index');
     }
 }
